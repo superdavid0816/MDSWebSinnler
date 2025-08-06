@@ -1,0 +1,187 @@
+{
+  "configVersion": 1,
+  "timestamp": 1754461760212,
+  "index": "https://sinnler.com/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "https://sinnler.com/chunk-6WNMKEPH.js",
+        "https://sinnler.com/chunk-KBA63WJQ.js",
+        "https://sinnler.com/chunk-MFVFCLIL.js",
+        "https://sinnler.com/chunk-PFI65AZI.js",
+        "https://sinnler.com/chunk-WOCH5H6L.js",
+        "https://sinnler.com/custom-sw.js",
+        "https://sinnler.com/favicon.ico",
+        "https://sinnler.com/index.html",
+        "https://sinnler.com/main-IYQ5JDUN.js",
+        "https://sinnler.com/manifest.webmanifest",
+        "https://sinnler.com/polyfills-QEK25H3V.js",
+        "https://sinnler.com/styles-KZNG256S.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "https://sinnler.com/assets/icons/icon-120x120.png",
+        "https://sinnler.com/assets/icons/icon-128x128.png",
+        "https://sinnler.com/assets/icons/icon-144x144.png",
+        "https://sinnler.com/assets/icons/icon-152x152.png",
+        "https://sinnler.com/assets/icons/icon-167x167.png",
+        "https://sinnler.com/assets/icons/icon-180x180.png",
+        "https://sinnler.com/assets/icons/icon-192x192.png",
+        "https://sinnler.com/assets/icons/icon-384x384.png",
+        "https://sinnler.com/assets/icons/icon-512x512.png",
+        "https://sinnler.com/assets/icons/icon-72x72.png",
+        "https://sinnler.com/assets/icons/icon-96x96.png",
+        "https://sinnler.com/assets/icons/play.png",
+        "https://sinnler.com/assets/images/AddToCart.png",
+        "https://sinnler.com/assets/images/IOSLine0.PNG",
+        "https://sinnler.com/assets/images/IOSLine2.PNG",
+        "https://sinnler.com/assets/images/IOSaddToHome1.jpg",
+        "https://sinnler.com/assets/images/IOSaddToHome2.jpg",
+        "https://sinnler.com/assets/images/IOSaddToHome3.jpg",
+        "https://sinnler.com/assets/images/Not_OK.png",
+        "https://sinnler.com/assets/images/OK.png",
+        "https://sinnler.com/assets/images/banner.jpg",
+        "https://sinnler.com/assets/images/cart.png",
+        "https://sinnler.com/assets/images/home.png",
+        "https://sinnler.com/assets/images/login.png",
+        "https://sinnler.com/assets/images/logo.png",
+        "https://sinnler.com/assets/images/qrcodeattendance.png",
+        "https://sinnler.com/assets/images/user.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "image-api",
+      "patterns": [
+        "https:\\/\\/mdswebapi-608096754844\\.us-east1\\.run\\.app\\/api\\/GoogleDriveService\\/GetFiles[^/]*[^/]*"
+      ],
+      "strategy": "freshness",
+      "maxSize": 1000,
+      "maxAge": 86400000000,
+      "timeoutMs": 5000,
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "version": 1
+    },
+    {
+      "name": "image-cache",
+      "patterns": [
+        "\\/assets\\/(?:.+\\/)?[^/]*\\.(jpg|jpeg|png|svg|webp|gif|avif)"
+      ],
+      "strategy": "staleWhileRevalidate",
+      "maxSize": 1000,
+      "maxAge": 86400000000,
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "version": 1
+    },
+    {
+      "name": "media-cache",
+      "patterns": [
+        "\\/api\\/MediaStreaming\\/GetVideoTS[^/]*",
+        "\\/api\\/MediaStreaming\\/GetVideoM3U8[^/]*",
+        "\\/api\\/MediaStreaming\\/(?:.+\\/)?[^/]*\\.ts",
+        "\\/api\\/MediaStreaming\\/(?:.+\\/)?[^/]*\\.m3u8"
+      ],
+      "strategy": "performance",
+      "maxSize": 10000,
+      "maxAge": 86400000000,
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "version": 1
+    },
+    {
+      "name": "external-files",
+      "patterns": [
+        "https:\\/\\/invoice\\.amego\\.tw\\/user\\/.*"
+      ],
+      "strategy": "freshness",
+      "maxSize": 10,
+      "maxAge": 86400000,
+      "timeoutMs": 10000,
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "version": 1
+    }
+  ],
+  "hashTable": {
+    "https://sinnler.com/assets/icons/icon-120x120.png": "5598aad59bc51095568b1223087db5fd0e5bba9e",
+    "https://sinnler.com/assets/icons/icon-128x128.png": "ca81113b5bc485bd962e30ab2175592ab8dfcb63",
+    "https://sinnler.com/assets/icons/icon-144x144.png": "d55ad469a398831cf1d27b757b2253c472d2d2a0",
+    "https://sinnler.com/assets/icons/icon-152x152.png": "db991df0b06f284bc81654d7e23f7636281125eb",
+    "https://sinnler.com/assets/icons/icon-167x167.png": "4df0760f06c440a209b9735a704afd5bff4177c7",
+    "https://sinnler.com/assets/icons/icon-180x180.png": "ff801f2879bb55a963181d8210556724cb98bcd4",
+    "https://sinnler.com/assets/icons/icon-192x192.png": "a636ce6b90df80c6da5006d2dcc4f7b59e6d7c5f",
+    "https://sinnler.com/assets/icons/icon-384x384.png": "9fa7a29de9cd1dcb8026bd098e56dba8246318dd",
+    "https://sinnler.com/assets/icons/icon-512x512.png": "c7730d55d689b7bf20a6e7ab9a4726594589b94f",
+    "https://sinnler.com/assets/icons/icon-72x72.png": "c7f525ee9dbe6e566316278162dfac126d276706",
+    "https://sinnler.com/assets/icons/icon-96x96.png": "e18d474d0c2107d078a0fa8b3c00d720de28e493",
+    "https://sinnler.com/assets/icons/play.png": "623a109e6171171e51ec2439b5c1bfb59ebf1bdb",
+    "https://sinnler.com/assets/images/AddToCart.png": "4f887a6b4dd72ad030e09fee5eae1e924ff5a462",
+    "https://sinnler.com/assets/images/IOSLine0.PNG": "fcf025eb9d7915a513f9563743fc31de5ad9195f",
+    "https://sinnler.com/assets/images/IOSLine2.PNG": "0fb70d7dd6df4ef139b8ec2c76d089a0a80f5e2b",
+    "https://sinnler.com/assets/images/IOSaddToHome1.jpg": "7d87750a1e41426333492d9f9410d26442de8a48",
+    "https://sinnler.com/assets/images/IOSaddToHome2.jpg": "363bb726f11215b5622686fc17ebec9304bceb66",
+    "https://sinnler.com/assets/images/IOSaddToHome3.jpg": "7f6de26730a2b87ba16fa10a80ce8be4a8d400ee",
+    "https://sinnler.com/assets/images/Not_OK.png": "a7f5aa7959ebb5bb811ee5a652c5416ec0a95538",
+    "https://sinnler.com/assets/images/OK.png": "60069fb79ddd6e56f2e2d8dfa0ddf5294cb760e8",
+    "https://sinnler.com/assets/images/banner.jpg": "a8e767b84f45be1170eb82eda9415c406ab53d0e",
+    "https://sinnler.com/assets/images/cart.png": "22449a01c550278be43b514fb2e3f4d6cf4d8fca",
+    "https://sinnler.com/assets/images/home.png": "ae40cdaf5512e2478a1551dfffc78be81500d84a",
+    "https://sinnler.com/assets/images/login.png": "60f440095aadb8a3b44010f46879324c58e6cd67",
+    "https://sinnler.com/assets/images/logo.png": "27c44ff8da149b5969ebbc8f363d365e33fee323",
+    "https://sinnler.com/assets/images/qrcodeattendance.png": "4f2aa1e8c6ddaec1f570f457d1f0cac99c71355a",
+    "https://sinnler.com/assets/images/user.png": "fefd57aa4b49e4482483cb59f75bc1785881ec33",
+    "https://sinnler.com/chunk-6WNMKEPH.js": "9fe40500d29374553272e240ba919b228c523b67",
+    "https://sinnler.com/chunk-KBA63WJQ.js": "0277cd91cf1eeda30dce1db1a9695acb3a3e579d",
+    "https://sinnler.com/chunk-MFVFCLIL.js": "5dd5ddd9b7d98b145709661123d01b185516d9c7",
+    "https://sinnler.com/chunk-PFI65AZI.js": "d8b7b46bab12bf16d7abb8d476880ea7a8e74479",
+    "https://sinnler.com/chunk-WOCH5H6L.js": "fff0931d23846215b77527008d6d2f3a75659a46",
+    "https://sinnler.com/custom-sw.js": "af30632facaca76f3f3f090d4efc400a6a012244",
+    "https://sinnler.com/favicon.ico": "cfc8f8e24abab06dc2fbca0e291f64ed8dd30ed7",
+    "https://sinnler.com/index.html": "e39bfb07bde037278c87f699ad8c220142077f30",
+    "https://sinnler.com/main-IYQ5JDUN.js": "e1ea4642975b5abfa33460d30059ecfb3e214e8f",
+    "https://sinnler.com/manifest.webmanifest": "95ec8ca556bfcfe5fd6def8d542c8a8aba423543",
+    "https://sinnler.com/polyfills-QEK25H3V.js": "6e71b68f09061ac362641261b096e764a4d7bc89",
+    "https://sinnler.com/styles-KZNG256S.css": "94b5a7e6893e2599cced46358eb544d2282b3e9e"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
