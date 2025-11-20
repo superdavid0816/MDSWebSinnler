@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1763629195400,
+  "timestamp": 1763630020433,
   "index": "https://sinnler.com/index.html",
   "assetGroups": [
     {
@@ -14,12 +14,12 @@
         "https://sinnler.com/chunk-2CQ47BA7.js",
         "https://sinnler.com/chunk-5L3JUT7Z.js",
         "https://sinnler.com/chunk-6B5D53SD.js",
-        "https://sinnler.com/chunk-EIND2NVC.js",
-        "https://sinnler.com/chunk-UVLSSS4U.js",
+        "https://sinnler.com/chunk-AE7DIWB2.js",
+        "https://sinnler.com/chunk-O4LY552G.js",
         "https://sinnler.com/custom-sw.js",
         "https://sinnler.com/favicon.ico",
         "https://sinnler.com/index.html",
-        "https://sinnler.com/main-DSNQ2YMZ.js",
+        "https://sinnler.com/main-MOZZK57D.js",
         "https://sinnler.com/manifest.webmanifest",
         "https://sinnler.com/polyfills-K4BBJPQD.js",
         "https://sinnler.com/styles-KZNG256S.css"
@@ -169,12 +169,12 @@
     "https://sinnler.com/chunk-2CQ47BA7.js": "45a2d6772d719bd20155c0083fec3613ff0d45e8",
     "https://sinnler.com/chunk-5L3JUT7Z.js": "fc1c027b0cc69f3864ba4e4ceea68d0523e062e3",
     "https://sinnler.com/chunk-6B5D53SD.js": "2b3a77744355855c7da69d5e5bba0dbffe996c60",
-    "https://sinnler.com/chunk-EIND2NVC.js": "63667e41a325b8e14d5f7eac4f4a1f79a60c9287",
-    "https://sinnler.com/chunk-UVLSSS4U.js": "2dc5d9c8f6b2027da1c124cd62c2fced7268461b",
+    "https://sinnler.com/chunk-AE7DIWB2.js": "9fba09419f7f32e8af0f4cf8d06fed5b5d14465f",
+    "https://sinnler.com/chunk-O4LY552G.js": "0594bc9de831749c1ac10bacd7f338519ab52620",
     "https://sinnler.com/custom-sw.js": "af30632facaca76f3f3f090d4efc400a6a012244",
     "https://sinnler.com/favicon.ico": "cfc8f8e24abab06dc2fbca0e291f64ed8dd30ed7",
-    "https://sinnler.com/index.html": "aea885064292628c59b2a664f13dc730fefbddd8",
-    "https://sinnler.com/main-DSNQ2YMZ.js": "f820b59156af29f562ddf871cd53aceb17b2725a",
+    "https://sinnler.com/index.html": "094eb9a5276ddeb2ca63c14219b3a69550507a5d",
+    "https://sinnler.com/main-MOZZK57D.js": "610e0a5e51bab53e5e136621ceed287411b1139a",
     "https://sinnler.com/manifest.webmanifest": "95ec8ca556bfcfe5fd6def8d542c8a8aba423543",
     "https://sinnler.com/polyfills-K4BBJPQD.js": "69b6181bb425221ec287d3bba3c9d72cb95510c3",
     "https://sinnler.com/styles-KZNG256S.css": "94b5a7e6893e2599cced46358eb544d2282b3e9e"
