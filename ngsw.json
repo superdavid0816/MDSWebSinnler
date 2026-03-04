@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1772371322326,
+  "timestamp": 1772605441844,
   "index": "https://sinnler.com/index.html",
   "assetGroups": [
     {
@@ -11,15 +11,15 @@
         "ignoreVary": true
       },
       "urls": [
-        "https://sinnler.com/chunk-AHMQV6B5.js",
-        "https://sinnler.com/chunk-KLM4BSVV.js",
-        "https://sinnler.com/chunk-LA4TGSP3.js",
-        "https://sinnler.com/chunk-RPMHQCLG.js",
-        "https://sinnler.com/chunk-VZSYVYQW.js",
+        "https://sinnler.com/chunk-ARV3CPQS.js",
+        "https://sinnler.com/chunk-ELJQM3HV.js",
+        "https://sinnler.com/chunk-FBUBPOIN.js",
+        "https://sinnler.com/chunk-KN5WPBND.js",
+        "https://sinnler.com/chunk-N67PGRKU.js",
         "https://sinnler.com/custom-sw.js",
         "https://sinnler.com/favicon.ico",
         "https://sinnler.com/index.html",
-        "https://sinnler.com/main-VMY7KJYB.js",
+        "https://sinnler.com/main-XG7NUQQ4.js",
         "https://sinnler.com/manifest.webmanifest",
         "https://sinnler.com/polyfills-NN5QSTJZ.js",
         "https://sinnler.com/styles-KZNG256S.css"
@@ -166,15 +166,15 @@
     "https://sinnler.com/assets/legal-documents/4-芯樂生活隱私政策.md": "1a69d0f7e45511afceefff65e28c65e20808fdf6",
     "https://sinnler.com/assets/legal-documents/5-芯樂生活退費及退換貨政策.md": "99f13333e054717c251e010c5cf3f1fd7ed03e25",
     "https://sinnler.com/assets/legal-documents/6-芯樂生活其他條款.md": "a77e10e7eb5b4ebacd52c3b45aceae186b5c315e",
-    "https://sinnler.com/chunk-AHMQV6B5.js": "7ab57c44f64beac7c0c1890f79c01c89977c5d9c",
-    "https://sinnler.com/chunk-KLM4BSVV.js": "b5a4c6433b51d56b0d54fef3b0bbcabbf8179387",
-    "https://sinnler.com/chunk-LA4TGSP3.js": "a9f8246414c057051fdeb04becef9d08ef023557",
-    "https://sinnler.com/chunk-RPMHQCLG.js": "766e7f1b385bfdaa78ffa5b0337352c010f35d52",
-    "https://sinnler.com/chunk-VZSYVYQW.js": "f05d586d1a092cf167ba6d587beed9e0c18e2498",
+    "https://sinnler.com/chunk-ARV3CPQS.js": "64e8752a0d2a86a4443914dad10f0724e30d37d8",
+    "https://sinnler.com/chunk-ELJQM3HV.js": "c22fde5b7557f46c2344850dff9adcada6985264",
+    "https://sinnler.com/chunk-FBUBPOIN.js": "57417eb429d51bfe7d797b11ab5cd89d843e8e72",
+    "https://sinnler.com/chunk-KN5WPBND.js": "1e3531d2d15bb4543a77d9015c3248725b5f0c55",
+    "https://sinnler.com/chunk-N67PGRKU.js": "dd07ee975da7651ca39ac801184d079e7931b678",
     "https://sinnler.com/custom-sw.js": "af30632facaca76f3f3f090d4efc400a6a012244",
     "https://sinnler.com/favicon.ico": "cfc8f8e24abab06dc2fbca0e291f64ed8dd30ed7",
-    "https://sinnler.com/index.html": "577216766a74abde8d41362b30ff1c855f6a99aa",
-    "https://sinnler.com/main-VMY7KJYB.js": "7a9c1bc6ff2d289fe5fcfb289fd0f74f3dd178bf",
+    "https://sinnler.com/index.html": "9ecdcae87ee9d8a58c44ca0ca7ec366b047881ae",
+    "https://sinnler.com/main-XG7NUQQ4.js": "92dcf4198ab655473c04ecd9c4610aaf92f865d3",
     "https://sinnler.com/manifest.webmanifest": "95ec8ca556bfcfe5fd6def8d542c8a8aba423543",
     "https://sinnler.com/polyfills-NN5QSTJZ.js": "2e1d3b4226c1775ca5c0ed2a2ccca6136b595fd2",
     "https://sinnler.com/styles-KZNG256S.css": "94b5a7e6893e2599cced46358eb544d2282b3e9e"
