@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海報分割列印工具</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f5f2;
+    --surface: #ffffff;
+    --surface2: #f0ede8;
+    --border: #ddd9d2;
+    --text: #1a1816;
+    --text2: #6b6560;
+    --accent: #c0392b;
+    --accent2: #e74c3c;
+    --info: #1f6aa5;
+    --info-bg: #eef6fd;
+    --radius: 10px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--text);
+    color: #fff;
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+  .brand-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .brand-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #fff;
+    object-fit: contain;
+    flex: 0 0 auto;
+  }
+  .brand-copy {
+    min-width: 0;
+    display: inline-block;
+  }
+  .brand-name {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    display: inline-block;
+  }
+  .brand-subtitle {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 4px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+  .brand-subtitle-char {
+    display: block;
+    flex: 0 0 auto;
+  }
+  .header-title {
+    text-align: right;
+  }
+  .header-title h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.04em; }
+  .header-title p { font-size: 13px; color: #aaa; margin-top: 4px; }
+
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    margin-bottom: 6px;
+    letter-spacing: 0.03em;
+  }
+
+  select, input[type="number"] {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6560' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  input[type="number"] { background-image: none; }
+  select:focus, input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  #customRow { display: none; margin-top: 16px; align-items: end; }
+
+  .hint-box {
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 16px;
+    line-height: 1.7;
+  }
+
+  .helper-box {
+    background: var(--info-bg);
+    border: 1px solid #d4e8f7;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 16px;
+    color: #234867;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .dropzone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 40px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .dropzone:hover, .dropzone.over {
+    border-color: var(--accent);
+    background: #fdf5f4;
+  }
+  .dropzone-icon { font-size: 36px; margin-bottom: 10px; color: var(--text2); }
+  .dropzone-title { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+  .dropzone-sub { font-size: 13px; color: var(--text2); }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  @media (max-width: 600px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .stat-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; letter-spacing: 0.04em; }
+  .stat-value { font-size: 18px; font-weight: 700; }
+
+  #previewWrap { display: none; }
+  #previewCanvas {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: block;
+    margin-top: 16px;
+    background: #fff;
+  }
+  #previewMsg { font-size: 13px; color: var(--text2); text-align: center; margin-top: 8px; }
+
+  .btn-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .overlay-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .replace-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+    align-items: end;
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .btn:hover { background: #333; }
+  .btn:disabled { background: #aaa; cursor: not-allowed; }
+  .btn-secondary { background: var(--info); }
+  .btn-secondary:hover { background: #215a87; }
+
+  #tilesSection { display: none; }
+  .tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .tile-cell { text-align: center; }
+  .tile-thumb {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: block;
+    margin: 0 auto 8px;
+    width: 100%;
+    background: #fff;
+  }
+  .tile-meta {
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .tile-link {
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tile-link:hover { background: var(--accent); color: #fff; }
+  .tile-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .bundle-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  #tileMsg { font-size: 13px; color: var(--text2); text-align: center; margin-top: 14px; line-height: 1.7; }
+
+  footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text2);
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  @media (max-width: 600px) {
+    header {
+      padding: 18px 20px;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .header-title { text-align: left; }
+    main { padding: 20px 16px 40px; }
+    .grid2, .grid3, .btn-row, .overlay-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <a class="brand-link" href="https://sinnler.com" target="_blank" rel="noopener noreferrer" aria-label="前往芯樂生活網站">
+      <img class="brand-logo" src="/assets/icons/icon-72x72.png" alt="芯樂生活 Logo">
+      <div class="brand-copy">
+        <div class="brand-name">芯樂生活</div>
+        <div class="brand-subtitle" aria-label="快樂身心靈">
+          <span class="brand-subtitle-char">快</span>
+          <span class="brand-subtitle-char">樂</span>
+          <span class="brand-subtitle-char">身</span>
+          <span class="brand-subtitle-char">心</span>
+          <span class="brand-subtitle-char">靈</span>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="header-title">
+    <h1>海報分割列印工具</h1>
+    <p>先分割 A4，再視需要選一格改用 A3 取代</p>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <div class="card-title">框架與紙張設定</div>
+    <div class="grid2">
+      <div>
+        <label>框架尺寸（cm）</label>
+        <select id="frameSize">
+          <option value="30x40">30 × 40 cm</option>
+          <option value="40x50" selected>40 × 50 cm</option>
+          <option value="50x70">50 × 70 cm</option>
+          <option value="custom">自訂尺寸...</option>
+        </select>
+      </div>
+      <div>
+        <label>基本紙張尺寸</label>
+        <select id="paperSize">
+          <option value="a4" selected>A4（21 × 29.7 cm）</option>
+          <option value="a3">A3（29.7 × 42 cm）</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;" class="grid2">
+      <div>
+        <label>分割模式</label>
+        <select id="splitMode">
+          <option value="a4_replace">A4 分割，可替換 1 張 A3</option>
+          <option value="two_a3" selected>40 × 50 cm 用 2 張 A3</option>
+          <option value="two_a4_fit">30 × 40 cm 用 2 張 A4（等比例縮放）</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="customRow" class="grid3">
+      <div>
+        <label>寬（cm）</label>
+        <input type="number" id="customW" value="40" min="10" max="300">
+      </div>
+      <div>
+        <label>高（cm）</label>
+        <input type="number" id="customH" value="50" min="10" max="300">
+      </div>
+      <div style="align-self:end;">
+        <button class="btn" id="applyCustom">套用自訂尺寸</button>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;" class="grid2">
+      <div>
+        <label>印表機邊界（mm，單側）</label>
+        <select id="margin">
+          <option value="5" selected>5 mm（一般印表機）</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="hint-box" id="calcHint">請先選擇尺寸，再上傳圖片。</div>
+    <div class="helper-box">
+      主要流程：你可以選擇固定分割模式。40 × 50 cm 可用 2 張 A3；30 × 40 cm 可用 2 張 A4 橫式，影像會先等比例縮放到最大可列印寬度，再上下分成兩張。其餘流程保留已驗證的固定分割路徑。
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">上傳圖片</div>
+    <div class="dropzone" id="dropzone">
+      <div class="dropzone-icon">↑</div>
+      <div class="dropzone-title">點此上傳或拖曳圖片</div>
+      <div class="dropzone-sub">支援 JPG / PNG，建議解析度 150dpi 以上</div>
+      <input type="file" id="fileInput" accept="image/*" style="display:none;">
+    </div>
+  </div>
+
+  <div class="card" id="previewWrap">
+    <div class="card-title">分頁預覽</div>
+    <div class="stat-grid" id="statsGrid"></div>
+    <canvas id="previewCanvas"></canvas>
+    <div id="previewMsg"></div>
+    <div class="btn-row">
+      <button class="btn" id="splitBtn">產生基本分割頁面</button>
+    </div>
+    <div class="replace-controls">
+      <div>
+        <label for="replaceTarget">要替換的格子</label>
+        <select id="replaceTarget"></select>
+      </div>
+      <button class="btn btn-secondary" id="replaceBtn">用A3替換</button>
+    </div>
+  </div>
+
+  <div class="card" id="tilesSection">
+    <div class="card-title">下載分割頁面</div>
+    <div class="bundle-actions" id="bundleActions"></div>
+    <div class="tiles-grid" id="tilesGrid"></div>
+    <div id="tileMsg"></div>
+  </div>
+</main>
+
+<footer>所有運算都在瀏覽器本地完成，圖片不會上傳到伺服器。</footer>
+
+<script>
+const PAPER = {
+  a4: { w: 210, h: 297, label: 'A4' },
+  a4l: { w: 297, h: 210, label: 'A4（橫式）' },
+  a3: { w: 297, h: 420, label: 'A3' },
+  a3l: { w: 420, h: 297, label: 'A3（橫式）' }
+};
+const FRAMES = { '30x40': [300, 400], '40x50': [400, 500], '50x70': [500, 700] };
+const DPI = 150;
+const mm2px = mm => Math.round(mm * DPI / 25.4);
+const mm2pt = mm => mm * 72 / 25.4;
+const $ = id => document.getElementById(id);
+
+let imgEl = null;
+let posterWmm = 400;
+let posterHmm = 500;
+let selectedOverlayTarget = '1-1';
+$('frameSize').addEventListener('change', function() {
+  $('customRow').style.display = this.value === 'custom' ? 'grid' : 'none';
+  if (this.value !== 'custom') {
+    [posterWmm, posterHmm] = FRAMES[this.value];
+    syncSplitMode();
+    updateHint();
+    if (imgEl) process();
+  }
+});
+
+$('applyCustom').addEventListener('click', () => {
+  const w = parseFloat($('customW').value);
+  const h = parseFloat($('customH').value);
+  if (w > 0 && h > 0) {
+    posterWmm = w * 10;
+    posterHmm = h * 10;
+    syncSplitMode();
+    updateHint();
+    if (imgEl) process();
+  }
+});
+
+['paperSize', 'margin', 'splitMode'].forEach(id => {
+  $(id).addEventListener('change', () => {
+    if (id === 'splitMode') syncSplitMode();
+    updateHint();
+    if (imgEl) process();
+  });
+});
+
+const dz = $('dropzone');
+const fi = $('fileInput');
+dz.addEventListener('click', () => fi.click());
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+dz.addEventListener('drop', e => {
+  e.preventDefault();
+  dz.classList.remove('over');
+  loadFile(e.dataTransfer.files[0]);
+});
+fi.addEventListener('change', () => loadFile(fi.files[0]));
+
+$('splitBtn').addEventListener('click', () => generateTiles(false));
+$('replaceTarget').addEventListener('change', e => {
+  selectedOverlayTarget = e.target.value;
+  if (imgEl) process();
+});
+$('replaceBtn').addEventListener('click', () => handleReplaceAction($('replaceTarget').value));
+
+function getMarginMM() { return parseInt($('margin').value, 10); }
+function getSplitMode() { return $('splitMode').value; }
+function isTwoA3Mode() { return getSplitMode() === 'two_a3'; }
+function isTwoA4FitMode() { return getSplitMode() === 'two_a4_fit'; }
+
+function calcTiles(posterMM, printMM) {
+  return Math.ceil(posterMM / printMM);
+}
+
+function getTileOffsets(count, posterMM, printMM, posterPx) {
+  if (count === 1) return [0];
+  const offsets = [];
+  const maxOffsetMM = Math.max(0, posterMM - printMM);
+  const stepMM = maxOffsetMM / (count - 1);
+  for (let i = 0; i < count; i++) {
+    const offsetMM = Math.min(i * stepMM, maxOffsetMM);
+    offsets.push(Math.round(offsetMM * posterPx / posterMM));
+  }
+  return offsets;
+}
+
+function getParams(paperKey = $('paperSize').value) {
+  const paper = PAPER[paperKey];
+  const marginMM = getMarginMM();
+  const pageWidthPx = mm2px(paper.w);
+  const pageHeightPx = mm2px(paper.h);
+  const marginPx = mm2px(marginMM);
+  const printW = paper.w - marginMM * 2;
+  const printH = paper.h - marginMM * 2;
+  const cols = calcTiles(posterWmm, printW);
+  const rows = calcTiles(posterHmm, printH);
+  const posterPxW = mm2px(posterWmm);
+  const posterPxH = mm2px(posterHmm);
+
+  return {
+    paper,
+    marginMM,
+    printW,
+    printH,
+    cols,
+    rows,
+    posterPxW,
+    posterPxH,
+    pageWidthPx,
+    pageHeightPx,
+    printPxW: pageWidthPx - marginPx * 2,
+    printPxH: pageHeightPx - marginPx * 2,
+    marginPx
+  };
+}
+
+function getActiveParams() {
+  if (isTwoA3Mode()) return getParams('a3l');
+  if (isTwoA4FitMode()) {
+    const params = getParams('a4l');
+    return {
+      ...params,
+      cols: 1,
+      rows: 2
+    };
+  }
+  return getParams();
+}
+
+function syncSplitMode() {
+  const twoA3Option = $('splitMode').querySelector('option[value="two_a3"]');
+  const twoA4FitOption = $('splitMode').querySelector('option[value="two_a4_fit"]');
+  const isTwoA3Supported = $('frameSize').value === '40x50' && posterWmm === 400 && posterHmm === 500;
+  const isTwoA4FitSupported = $('frameSize').value === '30x40' && posterWmm === 300 && posterHmm === 400;
+  twoA3Option.disabled = !isTwoA3Supported;
+  twoA4FitOption.disabled = !isTwoA4FitSupported;
+  if (!isTwoA3Supported && $('splitMode').value === 'two_a3') {
+    $('splitMode').value = 'a4_replace';
+  }
+  if (!isTwoA4FitSupported && $('splitMode').value === 'two_a4_fit') {
+    $('splitMode').value = 'a4_replace';
+  }
+}
+
+function updateHint() {
+  const p = getActiveParams();
+  const prefix = isTwoA3Mode()
+    ? 'A3 橫式列印區'
+    : isTwoA4FitMode()
+    ? 'A4 橫式列印區'
+    : '基本列印區';
+  const suffix = isTwoA4FitMode() ? ' | 等比例縮放後上下分成兩張' : '';
+  $('calcHint').textContent =
+    `${prefix}：${p.printW} × ${p.printH} mm | ` +
+    `${(posterWmm / 10).toFixed(0)} × ${(posterHmm / 10).toFixed(0)} cm | ` +
+    `${p.cols} 欄 × ${p.rows} 列 = ${p.cols * p.rows} 頁${suffix}`;
+}
+
+function getTwoA4FitScaledMetrics(params) {
+  const scaledWidthPx = params.printPxW;
+  const scaledHeightPx = Math.round(params.printPxW * params.posterPxH / params.posterPxW);
+  const scaledWidthMM = params.printW;
+  const scaledHeightMM = scaledHeightPx * 25.4 / DPI;
+  return { scaledWidthPx, scaledHeightPx, scaledWidthMM, scaledHeightMM };
+}
+
+function syncReplaceTargetOptions(params) {
+  const select = $('replaceTarget');
+  const previousValue = select.value || selectedOverlayTarget;
+  const options = [];
+
+  for (let r = 0; r < params.rows; r++) {
+    for (let c = 0; c < params.cols; c++) {
+      options.push(`${r + 1}-${c + 1}`);
+    }
+  }
+
+  select.innerHTML = '';
+  options.forEach(value => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = value;
+    select.appendChild(option);
+  });
+
+  const nextValue = options.includes(previousValue) ? previousValue : options[0];
+  if (nextValue) {
+    select.value = nextValue;
+    selectedOverlayTarget = nextValue;
+  }
+}
+
+function loadFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      imgEl = img;
+      process();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function process() {
+  const p = getActiveParams();
+  const colOffsets = getTileOffsets(p.cols, posterWmm, p.printW, p.posterPxW);
+  const rowOffsets = getTileOffsets(p.rows, posterHmm, p.printH, p.posterPxH);
+  const wCm = (posterWmm / 10).toFixed(0);
+  const hCm = (posterHmm / 10).toFixed(0);
+  const twoA3Mode = isTwoA3Mode();
+  const twoA4FitMode = isTwoA4FitMode();
+  if (!twoA3Mode && !twoA4FitMode) syncReplaceTargetOptions(p);
+
+  $('statsGrid').innerHTML = `
+    <div class="stat"><div class="stat-label">成品尺寸</div><div class="stat-value">${wCm}×${hCm} cm</div></div>
+    <div class="stat"><div class="stat-label">基本紙張</div><div class="stat-value">${p.paper.label}</div></div>
+    <div class="stat"><div class="stat-label">基本頁數</div><div class="stat-value">${p.cols}×${p.rows}</div></div>
+    ${twoA4FitMode ? `<div class="stat"><div class="stat-label">縮放後尺寸</div><div class="stat-value">${p.printW.toFixed(0)}×${(getTwoA4FitScaledMetrics(p).scaledHeightMM).toFixed(1)} mm</div></div>` : ''}
+  `;
+
+  drawPreview(p, colOffsets, rowOffsets);
+
+  const overlayReady = !twoA3Mode && !twoA4FitMode && $('paperSize').value === 'a4' && p.rows >= 1 && p.cols >= 1;
+  $('replaceBtn').closest('.replace-controls').style.display = overlayReady ? 'grid' : 'none';
+  setOverlayButtonsEnabled(overlayReady);
+  $('splitBtn').textContent = twoA3Mode
+    ? '產生 2 張 A3 分割頁面'
+    : twoA4FitMode
+    ? '產生 2 張 A4 分割頁面'
+    : '產生基本分割頁面';
+  $('previewMsg').textContent = twoA3Mode
+    ? '紅框是 2 張 A3 橫式分割頁。列印時請在 Acrobat 使用實際大小，並保持 A3 橫式。'
+    : twoA4FitMode
+    ? `紅框是 2 張 A4 橫式分割頁。影像會先等比例縮放到 ${p.printW.toFixed(0)}×${getTwoA4FitScaledMetrics(p).scaledHeightMM.toFixed(1)} mm，再上下分成兩張；列印時請在 Acrobat 使用實際大小，並保持 A4 橫式。`
+    : overlayReady
+    ? '紅框是基本分割頁。藍色虛線框代表目前選中的 A3 取代範圍；先選格子，再按「用A3替換」。'
+    : '紅框是基本分割頁。只有在基本紙張為 A4 時，才能使用 A3 取代頁。';
+
+  $('previewWrap').style.display = 'block';
+  $('tilesSection').style.display = 'none';
+  $('tilesGrid').innerHTML = '';
+  $('tileMsg').textContent = '';
+  updateHint();
+}
+
+function drawPreview(params, colOffsets, rowOffsets) {
+  const canvas = $('previewCanvas');
+  const aspect = params.posterPxH / params.posterPxW;
+  canvas.width = 720;
+  canvas.height = Math.round(720 * aspect);
+  const ctx = canvas.getContext('2d');
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (isTwoA4FitMode()) {
+    const metrics = getTwoA4FitScaledMetrics(params);
+    const scale = Math.min(canvas.width / metrics.scaledWidthPx, canvas.height / metrics.scaledHeightPx);
+    const drawW = metrics.scaledWidthPx * scale;
+    const drawH = metrics.scaledHeightPx * scale;
+    const drawX = (canvas.width - drawW) / 2;
+    const drawY = (canvas.height - drawH) / 2;
+
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(imgEl, drawX, drawY, drawW, drawH);
+
+    ctx.strokeStyle = 'rgba(192,57,43,0.85)';
+    ctx.fillStyle = 'rgba(192,57,43,0.92)';
+    ctx.lineWidth = 2;
+    ctx.font = 'bold 14px sans-serif';
+
+    for (let r = 0; r < params.rows; r++) {
+      const x = drawX;
+      const y = drawY + r * params.printPxH * scale;
+      const w = params.printPxW * scale;
+      const h = Math.min(params.printPxH, metrics.scaledHeightPx - r * params.printPxH) * scale;
+      ctx.strokeRect(x, y, w, h);
+      ctx.fillText(`${r + 1}-1`, x + 5, y + 18);
+    }
+    return;
+  }
+
+  ctx.drawImage(imgEl, 0, 0, canvas.width, canvas.height);
+
+  const scaleX = canvas.width / params.posterPxW;
+  const scaleY = canvas.height / params.posterPxH;
+
+  ctx.strokeStyle = 'rgba(192,57,43,0.85)';
+  ctx.fillStyle = 'rgba(192,57,43,0.92)';
+  ctx.lineWidth = 2;
+  ctx.font = 'bold 14px sans-serif';
+
+  for (let r = 0; r < params.rows; r++) {
+    for (let c = 0; c < params.cols; c++) {
+      const x = colOffsets[c] * scaleX;
+      const y = rowOffsets[r] * scaleY;
+      const w = params.printPxW * scaleX;
+      const h = params.printPxH * scaleY;
+      ctx.strokeRect(x, y, w, h);
+      ctx.fillText(`${r + 1}-${c + 1}`, x + 5, y + 18);
+    }
+  }
+
+  if (!isTwoA3Mode() && !isTwoA4FitMode() && $('paperSize').value === 'a4' && params.rows >= 1 && params.cols >= 1) {
+    const activeTarget = parseOverlayTarget(selectedOverlayTarget) || { rowIndex: 0, colIndex: 0 };
+    const overlayRect = getReplaceCropRect(params, colOffsets, rowOffsets, activeTarget.rowIndex, activeTarget.colIndex);
+    ctx.strokeStyle = 'rgba(31,106,165,0.95)';
+    ctx.setLineDash([8, 6]);
+    ctx.lineWidth = 3;
+    ctx.strokeRect(
+      overlayRect.x * scaleX,
+      overlayRect.y * scaleY,
+      overlayRect.w * scaleX,
+      overlayRect.h * scaleY
+    );
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(31,106,165,0.95)';
+    ctx.fillText(`A3 取代 ${selectedOverlayTarget}`, overlayRect.x * scaleX + 5, overlayRect.y * scaleY + 36);
+  }
+}
+
+function buildSourceCanvas(params) {
+  const srcCanvas = document.createElement('canvas');
+  srcCanvas.width = params.posterPxW;
+  srcCanvas.height = params.posterPxH;
+  const srcCtx = srcCanvas.getContext('2d');
+  srcCtx.drawImage(imgEl, 0, 0, params.posterPxW, params.posterPxH);
+  return srcCanvas;
+}
+
+function buildScaledSplitCanvas(params) {
+  const scaledWidthPx = params.printPxW;
+  const scaledHeightPx = Math.round(params.printPxW * params.posterPxH / params.posterPxW);
+  const scaledCanvas = document.createElement('canvas');
+  scaledCanvas.width = scaledWidthPx;
+  scaledCanvas.height = scaledHeightPx;
+  const scaledCtx = scaledCanvas.getContext('2d');
+  scaledCtx.drawImage(imgEl, 0, 0, scaledWidthPx, scaledHeightPx);
+  return scaledCanvas;
+}
+
+function makePageCanvas(pagePaper, sourceCanvas, crop, marginMM, drawSize = null) {
+  const marginPx = mm2px(marginMM);
+  const pageWidthPx = mm2px(pagePaper.w);
+  const pageHeightPx = mm2px(pagePaper.h);
+  const printableWidthPx = pageWidthPx - marginPx * 2;
+  const printableHeightPx = pageHeightPx - marginPx * 2;
+  const targetWidthPx = drawSize ? drawSize.w : printableWidthPx;
+  const targetHeightPx = drawSize ? drawSize.h : printableHeightPx;
+
+  const pageCanvas = document.createElement('canvas');
+  pageCanvas.width = pageWidthPx;
+  pageCanvas.height = pageHeightPx;
+
+  const ctx = pageCanvas.getContext('2d');
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, pageWidthPx, pageHeightPx);
+  ctx.drawImage(
+    sourceCanvas,
+    crop.x, crop.y, crop.w, crop.h,
+    marginPx, marginPx, targetWidthPx, targetHeightPx
+  );
+
+  return {
+    canvas: pageCanvas,
+    pageWidthPx,
+    pageHeightPx,
+    printableWidthPx,
+    printableHeightPx
+  };
+}
+
+function getReplaceCropRect(baseParams, colOffsets, rowOffsets, rowIndex, colIndex) {
+  const replacePaper = PAPER.a3;
+  const printableWMM = replacePaper.w - baseParams.marginMM * 2;
+  const printableHMM = replacePaper.h - baseParams.marginMM * 2;
+  const replacePrintPxW = Math.round(printableWMM * baseParams.posterPxW / posterWmm);
+  const replacePrintPxH = Math.round(printableHMM * baseParams.posterPxH / posterHmm);
+  const isRight = colIndex === baseParams.cols - 1;
+  const isBottom = rowIndex === baseParams.rows - 1;
+  const baseX = colOffsets[colIndex];
+  const baseY = rowOffsets[rowIndex];
+  const baseRight = baseX + baseParams.printPxW;
+  const baseBottom = baseY + baseParams.printPxH;
+
+  const x = isRight
+    ? Math.max(0, baseRight - replacePrintPxW)
+    : Math.min(baseX, Math.max(0, baseParams.posterPxW - replacePrintPxW));
+  const y = isBottom
+    ? Math.max(0, baseBottom - replacePrintPxH)
+    : Math.min(baseY, Math.max(0, baseParams.posterPxH - replacePrintPxH));
+
+  return {
+    x,
+    y,
+    w: Math.min(replacePrintPxW, baseParams.posterPxW),
+    h: Math.min(replacePrintPxH, baseParams.posterPxH)
+  };
+}
+
+function setOverlayButtonsEnabled(enabled) {
+  $('replaceBtn').disabled = !enabled;
+  $('replaceTarget').disabled = !enabled;
+  $('replaceBtn').textContent = enabled ? '用A3替換' : '目前不適用 A3 替換';
+}
+
+function makePrintHtml({ dataUrl, pageWidthMM, pageHeightMM, marginMM, name }) {
+  return `<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>${name}</title>
+<style>
+  @page {
+    size: ${pageWidthMM}mm ${pageHeightMM}mm;
+    margin: 0;
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: ${pageWidthMM}mm;
+    height: ${pageHeightMM}mm;
+    background: #fff;
+  }
+  .page {
+    position: relative;
+    width: ${pageWidthMM}mm;
+    height: ${pageHeightMM}mm;
+    overflow: hidden;
+    background: #fff;
+  }
+  img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: ${pageWidthMM}mm;
+    height: ${pageHeightMM}mm;
+    display: block;
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <img src="${dataUrl}" alt="${name}">
+  </div>
+</body>
+</html>`;
+}
+
+function dataUrlToBytes(dataUrl) {
+  const base64 = dataUrl.split(',')[1];
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+function createPdfBlob(pages) {
+  const encoder = new TextEncoder();
+  const chunks = [];
+  const offsets = [];
+  let length = 0;
+
+  const pushBytes = bytes => {
+    chunks.push(bytes);
+    length += bytes.length;
+  };
+
+  const pushText = text => pushBytes(encoder.encode(text));
+
+  const objectCount = 2 + pages.length * 3;
+  const pageObjectIds = [];
+  const contentObjectIds = [];
+  const imageObjectIds = [];
+
+  for (let i = 0; i < pages.length; i++) {
+    pageObjectIds.push(3 + i * 3);
+    contentObjectIds.push(4 + i * 3);
+    imageObjectIds.push(5 + i * 3);
+  }
+
+  pushText('%PDF-1.3\n%\xFF\xFF\xFF\xFF\n');
+
+  offsets[1] = length;
+  pushText(`1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n`);
+
+  offsets[2] = length;
+  pushText(`2 0 obj\n<< /Type /Pages /Count ${pages.length} /Kids [${pageObjectIds.map(id => `${id} 0 R`).join(' ')}] >>\nendobj\n`);
+
+  pages.forEach((page, index) => {
+    const pageId = pageObjectIds[index];
+    const contentId = contentObjectIds[index];
+    const imageId = imageObjectIds[index];
+    const widthPt = mm2pt(page.pageWidthMM).toFixed(2);
+    const heightPt = mm2pt(page.pageHeightMM).toFixed(2);
+    const imageName = `/Im${index + 1}`;
+    const contentStream = `q\n${widthPt} 0 0 ${heightPt} 0 0 cm\n${imageName} Do\nQ\n`;
+    const imageBytes = dataUrlToBytes(page.dataUrl);
+
+    offsets[pageId] = length;
+    pushText(
+      `${pageId} 0 obj\n` +
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${widthPt} ${heightPt}] ` +
+      `/Resources << /XObject << ${imageName} ${imageId} 0 R >> >> ` +
+      `/Contents ${contentId} 0 R >>\nendobj\n`
+    );
+
+    offsets[contentId] = length;
+    pushText(`${contentId} 0 obj\n<< /Length ${contentStream.length} >>\nstream\n${contentStream}endstream\nendobj\n`);
+
+    offsets[imageId] = length;
+    pushText(
+      `${imageId} 0 obj\n` +
+      `<< /Type /XObject /Subtype /Image /Width ${page.pixelWidth} /Height ${page.pixelHeight} ` +
+      `/ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imageBytes.length} >>\nstream\n`
+    );
+    pushBytes(imageBytes);
+    pushText(`\nendstream\nendobj\n`);
+  });
+
+  const xrefStart = length;
+  pushText(`xref\n0 ${objectCount + 1}\n`);
+  pushText(`0000000000 65535 f \n`);
+  for (let i = 1; i <= objectCount; i++) {
+    pushText(`${String(offsets[i]).padStart(10, '0')} 00000 n \n`);
+  }
+  pushText(`trailer\n<< /Size ${objectCount + 1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`);
+
+  return new Blob(chunks, { type: 'application/pdf' });
+}
+
+function makeTileRecord({ canvas, name, paperLabel, detail, pageWidthMM, pageHeightMM, marginMM }) {
+  const thumb = document.createElement('canvas');
+  const scale = 170 / canvas.width;
+  thumb.width = Math.round(canvas.width * scale);
+  thumb.height = Math.round(canvas.height * scale);
+  thumb.className = 'tile-thumb';
+  thumb.getContext('2d').drawImage(canvas, 0, 0, thumb.width, thumb.height);
+
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+  const printHtml = makePrintHtml({
+    dataUrl,
+    pageWidthMM,
+    pageHeightMM,
+    marginMM,
+    name
+  });
+  const printBlobUrl = URL.createObjectURL(new Blob([printHtml], { type: 'text/html' }));
+  const pdfBlob = createPdfBlob([{
+    dataUrl,
+    pageWidthMM,
+    pageHeightMM,
+    pixelWidth: canvas.width,
+    pixelHeight: canvas.height
+  }]);
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+
+  return {
+    name,
+    paperLabel,
+    detail,
+    downloadName: `${name}.jpg`,
+    dataUrl,
+    thumb,
+    printName: `${name}.html`,
+    printUrl: printBlobUrl,
+    pdfName: `${name}.pdf`,
+    pdfUrl,
+    pageWidthMM,
+    pageHeightMM,
+    pixelWidth: canvas.width,
+    pixelHeight: canvas.height
+  };
+}
+
+function renderTiles(tileRecords, replaceAction = null) {
+  const grid = $('tilesGrid');
+  grid.innerHTML = '';
+  const bundleActions = $('bundleActions');
+  bundleActions.innerHTML = '';
+
+  tileRecords.forEach(tile => {
+    const cell = document.createElement('div');
+    cell.className = 'tile-cell';
+
+    const meta = document.createElement('div');
+    meta.className = 'tile-meta';
+    meta.textContent = `${tile.paperLabel} | ${tile.detail}`;
+
+    const actions = document.createElement('div');
+    actions.className = 'tile-actions';
+
+    const imageLink = document.createElement('a');
+    imageLink.href = tile.dataUrl;
+    imageLink.download = tile.downloadName;
+    imageLink.className = 'tile-link';
+    imageLink.textContent = '下載 JPG';
+
+    const printLink = document.createElement('a');
+    printLink.href = tile.printUrl;
+    printLink.download = tile.printName;
+    printLink.className = 'tile-link';
+    printLink.textContent = '下載列印版';
+
+    const pdfLink = document.createElement('a');
+    pdfLink.href = tile.pdfUrl;
+    pdfLink.download = tile.pdfName;
+    pdfLink.className = 'tile-link';
+    pdfLink.textContent = '下載 PDF';
+
+    cell.appendChild(tile.thumb);
+    cell.appendChild(meta);
+    actions.appendChild(imageLink);
+    actions.appendChild(printLink);
+    actions.appendChild(pdfLink);
+    cell.appendChild(actions);
+    grid.appendChild(cell);
+  });
+
+  const mergedPdfBlob = createPdfBlob(tileRecords.map(tile => ({
+    dataUrl: tile.dataUrl,
+    pageWidthMM: tile.pageWidthMM,
+    pageHeightMM: tile.pageHeightMM,
+    pixelWidth: tile.pixelWidth,
+    pixelHeight: tile.pixelHeight
+  })));
+  const mergedPdfUrl = URL.createObjectURL(mergedPdfBlob);
+  const mergedPdfLink = document.createElement('a');
+  mergedPdfLink.href = mergedPdfUrl;
+  mergedPdfLink.download = replaceAction ? `poster_bundle_${replaceAction.target}_replace.pdf` : 'poster_bundle.pdf';
+  mergedPdfLink.className = 'tile-link';
+  mergedPdfLink.textContent = '下載整組 PDF';
+  bundleActions.appendChild(mergedPdfLink);
+
+  const openPdfLink = document.createElement('a');
+  openPdfLink.href = mergedPdfUrl;
+  openPdfLink.className = 'tile-link';
+  openPdfLink.textContent = '開啟整組 PDF';
+  openPdfLink.target = '_blank';
+  bundleActions.appendChild(openPdfLink);
+
+  $('tilesSection').style.display = 'block';
+  if (!replaceAction) {
+    $('tileMsg').textContent = `已產生 ${tileRecords.length} 頁。請優先使用「下載列印版」來列印，因為它已經把 A4/A3 的實體尺寸鎖定。`;
+  } else {
+    $('tileMsg').textContent = `已產生 ${tileRecords.length} 頁：${replaceAction.target} 那張 A4 已改成 1 張 A3 取代頁，其餘基本分割頁保留，並維持相同實體比例基準。請優先使用「下載列印版」來列印。`;
+  }
+  $('tilesSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function parseOverlayTarget(target) {
+  if (!target) return null;
+  const [rowText, colText] = target.split('-');
+  return { rowIndex: parseInt(rowText, 10) - 1, colIndex: parseInt(colText, 10) - 1 };
+}
+
+function handleReplaceAction(target) {
+  selectedOverlayTarget = target;
+  $('replaceTarget').value = target;
+  if (imgEl) process();
+  generateTiles({ target });
+}
+
+async function generateTiles(replaceAction = null) {
+  if (!imgEl) return;
+
+  const splitBtn = $('splitBtn');
+  splitBtn.disabled = true;
+  splitBtn.textContent = '產生中...';
+  setOverlayButtonsLoading(true, replaceAction);
+
+  const baseParams = getActiveParams();
+  const colOffsets = getTileOffsets(baseParams.cols, posterWmm, baseParams.printW, baseParams.posterPxW);
+  const rowOffsets = getTileOffsets(baseParams.rows, posterHmm, baseParams.printH, baseParams.posterPxH);
+  const sourceCanvas = isTwoA4FitMode() ? buildScaledSplitCanvas(baseParams) : buildSourceCanvas(baseParams);
+  const tileRecords = [];
+  const twoA3Mode = isTwoA3Mode();
+  const twoA4FitMode = isTwoA4FitMode();
+  const canOverlay = !twoA3Mode && !twoA4FitMode && $('paperSize').value === 'a4' && baseParams.rows >= 1 && baseParams.cols >= 1;
+  const activeAction = replaceAction && canOverlay ? replaceAction : null;
+  const skippedTarget = activeAction ? parseOverlayTarget(activeAction.target) : null;
+
+  for (let r = 0; r < baseParams.rows; r++) {
+    for (let c = 0; c < baseParams.cols; c++) {
+      if (skippedTarget && skippedTarget.rowIndex === r && skippedTarget.colIndex === c) {
+        continue;
+      }
+      const crop = twoA4FitMode
+        ? {
+            x: 0,
+            y: r * baseParams.printPxH,
+            w: baseParams.printPxW,
+            h: Math.min(baseParams.printPxH, sourceCanvas.height - r * baseParams.printPxH)
+          }
+        : {
+            x: colOffsets[c],
+            y: rowOffsets[r],
+            w: baseParams.printPxW,
+            h: baseParams.printPxH
+          };
+      const page = makePageCanvas(
+        baseParams.paper,
+        sourceCanvas,
+        crop,
+        baseParams.marginMM,
+        twoA4FitMode ? { w: crop.w, h: crop.h } : null
+      );
+      tileRecords.push(makeTileRecord({
+        canvas: page.canvas,
+        name: twoA3Mode
+          ? `poster_A3_${r + 1}`
+          : twoA4FitMode
+          ? `poster_A4_${r + 1}`
+          : `poster_${r + 1}-${c + 1}`,
+        paperLabel: baseParams.paper.label,
+        detail: twoA3Mode
+          ? `A3 頁 ${r + 1} / ${baseParams.rows}`
+          : twoA4FitMode
+          ? `A4 頁 ${r + 1} / ${baseParams.rows}（等比例縮放）`
+          : `基本頁 ${r + 1}-${c + 1}`,
+        pageWidthMM: baseParams.paper.w,
+        pageHeightMM: baseParams.paper.h,
+        marginMM: baseParams.marginMM
+      }));
+      await new Promise(resolve => setTimeout(resolve, 0));
+    }
+  }
+
+  if (activeAction) {
+    const target = parseOverlayTarget(activeAction.target);
+    const cropRect = getReplaceCropRect(baseParams, colOffsets, rowOffsets, target.rowIndex, target.colIndex);
+    const overlayPage = makePageCanvas(PAPER.a3, sourceCanvas, cropRect, baseParams.marginMM);
+    const overlayTile = makeTileRecord({
+      canvas: overlayPage.canvas,
+      name: `poster_${activeAction.target}_A3_replace`,
+      paperLabel: 'A3',
+      detail: `取代頁 ${activeAction.target}`,
+      pageWidthMM: PAPER.a3.w,
+      pageHeightMM: PAPER.a3.h,
+      marginMM: baseParams.marginMM
+    });
+    tileRecords.push(overlayTile);
+  }
+
+  renderTiles(tileRecords, activeAction);
+
+  splitBtn.disabled = false;
+  splitBtn.textContent = twoA3Mode
+    ? '重新產生 2 張 A3 分割頁面'
+    : twoA4FitMode
+    ? '重新產生 2 張 A4 分割頁面'
+    : '重新產生基本分割頁面';
+  setOverlayButtonsLoading(false);
+  setOverlayButtonsEnabled(canOverlay);
+}
+
+function setOverlayButtonsLoading(isLoading, activeAction = null) {
+  $('replaceBtn').disabled = isLoading;
+  $('replaceTarget').disabled = isLoading;
+  $('replaceBtn').textContent = isLoading
+    ? `產生中...`
+    : '用A3替換';
+}
+
+syncSplitMode();
+updateHint();
+</script>
+</body>
+</html>
