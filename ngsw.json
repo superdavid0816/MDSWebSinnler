@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1787385789962,
+  "timestamp": 1787385873863,
   "index": "https://sinnler.com/index.html",
   "assetGroups": [
     {
@@ -11,15 +11,15 @@
         "ignoreVary": true
       },
       "urls": [
-        "https://sinnler.com/chunk-ETRT5YYM.js",
-        "https://sinnler.com/chunk-FRG3IOIN.js",
-        "https://sinnler.com/chunk-TJN2DEI3.js",
-        "https://sinnler.com/chunk-X3DSJTQN.js",
-        "https://sinnler.com/chunk-XSCJ3NMR.js",
+        "https://sinnler.com/chunk-3XT7CFRL.js",
+        "https://sinnler.com/chunk-LV3LAU5G.js",
+        "https://sinnler.com/chunk-MQURDOVW.js",
+        "https://sinnler.com/chunk-NPESBFTY.js",
+        "https://sinnler.com/chunk-VWS6AIGC.js",
         "https://sinnler.com/custom-sw.js",
         "https://sinnler.com/favicon.ico",
         "https://sinnler.com/index.html",
-        "https://sinnler.com/main-RTA76TA2.js",
+        "https://sinnler.com/main-F4OL3SOZ.js",
         "https://sinnler.com/manifest.webmanifest",
         "https://sinnler.com/polyfills-NN5QSTJZ.js",
         "https://sinnler.com/styles-JVVGR5O4.css"
@@ -170,15 +170,15 @@
     "https://sinnler.com/assets/legal-documents/6-芯樂生活其他條款.md": "04d43ff660a77e404734d7ff1e92740a85e1fc18",
     "https://sinnler.com/assets/legal-documents/7-芯樂生活免責聲明.md": "36ff94158ad65221307d75decb0b12b7ddf930d6",
     "https://sinnler.com/assets/tools/poster-tile-splitter-extended.html": "a09ccae6727b965d42f069fec1104faed0a519ca",
-    "https://sinnler.com/chunk-ETRT5YYM.js": "90b941f3f9cf3ce2a2fd10f26245c519d6e0799a",
-    "https://sinnler.com/chunk-FRG3IOIN.js": "a6713c774f8bf0c56a50c0ca04b3afc0080fc260",
-    "https://sinnler.com/chunk-TJN2DEI3.js": "9036fbd8e16e7bdab8dbc99ad14e40d483892d35",
-    "https://sinnler.com/chunk-X3DSJTQN.js": "1617ddc978506be3a9f02defe6a42f0a4a9becdf",
-    "https://sinnler.com/chunk-XSCJ3NMR.js": "955b141b3523bfc464d25484c5acebd64cb7e6da",
+    "https://sinnler.com/chunk-3XT7CFRL.js": "99b721bb565b3a84a889fe6334fc265af7622858",
+    "https://sinnler.com/chunk-LV3LAU5G.js": "be4fec0e2d23e1868bb8b116a97639fb5f157cc4",
+    "https://sinnler.com/chunk-MQURDOVW.js": "fb40b056594211ef765de491da60f9fb16df6939",
+    "https://sinnler.com/chunk-NPESBFTY.js": "d07317cc4d86759c18c0ce189ba5339b94e82f2d",
+    "https://sinnler.com/chunk-VWS6AIGC.js": "8a1fb2f52529cd645a286c82678935cee205d67a",
     "https://sinnler.com/custom-sw.js": "af30632facaca76f3f3f090d4efc400a6a012244",
     "https://sinnler.com/favicon.ico": "cfc8f8e24abab06dc2fbca0e291f64ed8dd30ed7",
-    "https://sinnler.com/index.html": "07a22365b21f31dec4ab73abcc3b2be8b9dd16a5",
-    "https://sinnler.com/main-RTA76TA2.js": "89543c2cd1dcc36ea4601b6fe9673ca503bd0d9b",
+    "https://sinnler.com/index.html": "5b63276130c5036a54c8451f08935e4b85ffd51e",
+    "https://sinnler.com/main-F4OL3SOZ.js": "3a0090cc6cdda84522632fb3526d76e7f6ac0e44",
     "https://sinnler.com/manifest.webmanifest": "95ec8ca556bfcfe5fd6def8d542c8a8aba423543",
     "https://sinnler.com/polyfills-NN5QSTJZ.js": "2e1d3b4226c1775ca5c0ed2a2ccca6136b595fd2",
     "https://sinnler.com/styles-JVVGR5O4.css": "f7154d6c36dad8cb94c485e05ada54237d54011f"
