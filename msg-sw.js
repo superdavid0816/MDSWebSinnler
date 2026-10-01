@@ -4,21 +4,68 @@
 // iPhone（iOS 16.4以上、加到主畫面）、Android／電腦上已安裝的 App 支援；不支援的瀏覽器略過。
 importScripts('./ngsw-worker.js');
 
+var MSG_URL_RE = /^\/(mgnh|users)\/messages(\?t=\d+)?$/;
+
+// 2026-10-01第208筆：手機上的記錄（iOS 26點通知不轉跳，查實際發生什麼）。記在Cache Storage，「我的訊息」連點標題5下可看。
+var MSG_DIAG_CACHE = 'msg-diag';
+var diagChain = Promise.resolve();
+function msgDiag(e, d) {
+  diagChain = diagChain.then(function () {
+    return caches.open(MSG_DIAG_CACHE).then(function (c) {
+      return c.match('/__msg-diag').then(function (r) { return r ? r.json() : []; }).catch(function () { return []; }).then(function (list) {
+        list.push({ at: Date.now(), who: 'sw', e: e, d: d === undefined ? '' : String(d).slice(0, 200) });
+        return c.put('/__msg-diag', new Response(JSON.stringify(list.slice(-60)), { headers: { 'Content-Type': 'application/json' } }));
+      });
+    });
+  }).catch(function () { });
+  return diagChain;
+}
+
+// 2026-10-01第208筆：記錄ngsw點通知時換頁（navigate）、開新視窗（openWindow）的結果，行為不變
+(function () {
+  try {
+    var origNav = self.WindowClient && WindowClient.prototype.navigate;
+    if (origNav) {
+      WindowClient.prototype.navigate = function (url) {
+        var p = origNav.apply(this, arguments);
+        Promise.resolve(p).then(function (c) { msgDiag('navigate結果', c ? '成功 ' + c.url : '回傳null'); }, function (err) { msgDiag('navigate失敗', err && err.message); });
+        return p;
+      };
+    }
+    var origOpen = self.Clients && Clients.prototype.openWindow;
+    if (origOpen) {
+      Clients.prototype.openWindow = function (url) {
+        var p = origOpen.apply(this, arguments);
+        Promise.resolve(p).then(function (c) { msgDiag('openWindow結果', c ? '成功 ' + c.url : '回傳null'); }, function (err) { msgDiag('openWindow失敗', err && err.message); });
+        return p;
+      };
+    }
+  } catch (e) { }
+})();
+
 self.addEventListener('push', function (event) {
   var n = null;
+  var url = '', tag = '';
   try {
     var data = event.data ? event.data.json() : null;
     if (data && typeof data.appBadge === 'number') {
       n = data.appBadge;
     }
-  } catch (e) {
-    n = null;
+    url = data.notification.data.onActionClick['default'].url || '';
+    tag = data.notification.tag || '';
+  } catch (e) { }
+  var jobs = [msgDiag('收到推送', url + ' tag=' + tag + ' 未讀=' + n)];
+  // 2026-10-01第208筆：記下最後一則推送的對話網址；iOS 26點通知時若沒有送出點擊事件，App打開時用「通知已不在通知中心」判斷是點了通知（msg.service.ts）
+  if (MSG_URL_RE.test(url)) {
+    jobs.push(caches.open(MSG_NAV_CACHE).then(function (c) {
+      return c.put('/__msg-last-push', new Response(JSON.stringify({ url: url, tag: tag, at: Date.now() }), { headers: { 'Content-Type': 'application/json' } }));
+    }).catch(function () { }));
   }
   var nav = self.navigator;
-  if (n === null || !nav || !('setAppBadge' in nav)) {
-    return;
+  if (n !== null && nav && ('setAppBadge' in nav)) {
+    jobs.push((n > 0 ? nav.setAppBadge(n) : nav.clearAppBadge()).catch(function () { }));
   }
-  event.waitUntil((n > 0 ? nav.setAppBadge(n) : nav.clearAppBadge()).catch(function () { }));
+  event.waitUntil(Promise.all(jobs));
 });
 
 // 2026-10-01第204筆：iPhone點通知常只把App叫到前面或從首頁開啟，忽略通知裡的網址（ngsw的navigate／openWindow）。
@@ -31,15 +78,19 @@ self.addEventListener('notificationclick', function (event) {
   } catch (e) {
     url = '';
   }
-  if (!/^\/(mgnh|users)\/messages(\?t=\d+)?$/.test(url)) {
+  if (!MSG_URL_RE.test(url)) {
+    event.waitUntil(msgDiag('點通知（網址不符）', url));
     return;
   }
   var body = JSON.stringify({ url: url, at: Date.now() });
-  event.waitUntil(caches.open(MSG_NAV_CACHE).then(function (c) {
+  event.waitUntil(msgDiag('點通知', url).then(function () {
+    return caches.open(MSG_NAV_CACHE);
+  }).then(function (c) {
     return c.put('/__msg-pending-nav', new Response(body, { headers: { 'Content-Type': 'application/json' } }));
   }).catch(function () { }).then(function () {
     // 2026-10-01第205筆：記下後也直接通知開著的App換頁（iPhone的ngsw換頁失敗時不會送出點通知事件；App回到前景時網址可能還沒記好）
     return self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (list) {
+      msgDiag('通知開著的App', list.length + '個視窗 ' + list.map(function (c) { return c.url.replace(self.registration.scope, '/') + (c.focused ? '(前景)' : ''); }).join(' '));
       list.forEach(function (c) { c.postMessage({ type: 'MSG_NAV', url: url }); });
     });
   }).catch(function () { }));
