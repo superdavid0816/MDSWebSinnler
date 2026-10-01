@@ -20,3 +20,22 @@ self.addEventListener('push', function (event) {
   }
   event.waitUntil((n > 0 ? nav.setAppBadge(n) : nav.clearAppBadge()).catch(function () { }));
 });
+
+// 2026-10-01第204筆：iPhone點通知常只把App叫到前面或從首頁開啟，忽略通知裡的網址（ngsw的navigate／openWindow）。
+// 這裡把要開的網址記在Cache Storage，App啟動或回到前景時由msg.service.ts讀出並換頁（只接受站內訊息頁）。
+var MSG_NAV_CACHE = 'msg-pending-nav';
+self.addEventListener('notificationclick', function (event) {
+  var url = '';
+  try {
+    url = event.notification.data.onActionClick['default'].url || '';
+  } catch (e) {
+    url = '';
+  }
+  if (!/^\/(mgnh|users)\/messages(\?t=\d+)?$/.test(url)) {
+    return;
+  }
+  var body = JSON.stringify({ url: url, at: Date.now() });
+  event.waitUntil(caches.open(MSG_NAV_CACHE).then(function (c) {
+    return c.put('/__msg-pending-nav', new Response(body, { headers: { 'Content-Type': 'application/json' } }));
+  }).catch(function () { }));
+});
