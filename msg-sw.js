@@ -37,5 +37,10 @@ self.addEventListener('notificationclick', function (event) {
   var body = JSON.stringify({ url: url, at: Date.now() });
   event.waitUntil(caches.open(MSG_NAV_CACHE).then(function (c) {
     return c.put('/__msg-pending-nav', new Response(body, { headers: { 'Content-Type': 'application/json' } }));
+  }).catch(function () { }).then(function () {
+    // 2026-10-01第205筆：記下後也直接通知開著的App換頁（iPhone的ngsw換頁失敗時不會送出點通知事件；App回到前景時網址可能還沒記好）
+    return self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (list) {
+      list.forEach(function (c) { c.postMessage({ type: 'MSG_NAV', url: url }); });
+    });
   }).catch(function () { }));
 });
