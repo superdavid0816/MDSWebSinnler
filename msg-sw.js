@@ -55,10 +55,17 @@ self.addEventListener('push', function (event) {
     tag = data.notification.tag || '';
   } catch (e) { }
   var jobs = [msgDiag('收到推送', url + ' tag=' + tag + ' 未讀=' + n)];
-  // 2026-10-01第208筆：記下最後一則推送的對話網址；iOS 26點通知時若沒有送出點擊事件，App打開時用「通知已不在通知中心」判斷是點了通知（msg.service.ts）
+  // 2026-10-01第208筆：記下最後一則推送的對話網址；iOS 26點通知時沒有送出點擊事件，App打開時用這筆記錄換頁（msg.service.ts）
+  // 2026-10-02第209筆：收到推送當下App正開在畫面上（使用者已看到）就不記，避免之後切回App時又跳頁
   if (MSG_URL_RE.test(url)) {
-    jobs.push(caches.open(MSG_NAV_CACHE).then(function (c) {
-      return c.put('/__msg-last-push', new Response(JSON.stringify({ url: url, tag: tag, at: Date.now() }), { headers: { 'Content-Type': 'application/json' } }));
+    jobs.push(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (list) {
+      var shown = list.some(function (c) { return c.visibilityState === 'visible'; });
+      if (shown) {
+        return msgDiag('App正開在畫面上，不記最後推送', url);
+      }
+      return caches.open(MSG_NAV_CACHE).then(function (c) {
+        return c.put('/__msg-last-push', new Response(JSON.stringify({ url: url, tag: tag, at: Date.now() }), { headers: { 'Content-Type': 'application/json' } }));
+      });
     }).catch(function () { }));
   }
   var nav = self.navigator;
