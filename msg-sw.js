@@ -11,10 +11,26 @@ var MSG_NAV_CACHE = 'msg-pending-nav';
 // 不支援宣告式推送的舊版iOS（推送事件沒有event.notification）：由這裡照原本格式顯示通知。
 self.addEventListener('push', function (event) {
   var data = null;
+  var why = '';
   try {
     data = event.data ? event.data.json() : null;
+    if (!event.data) {
+      why = '沒有event.data';
+    }
   } catch (e) {
     data = null;
+    why = '內容不是JSON：' + (e && e.message);
+  }
+  // 2026-10-04第214筆：實機（iOS 18.7、26.6）收到宣告式推送時讀不到內容（記錄都是「收到推送 tag= 未讀=null」），
+  // 由iOS顯示通知（event.notification）。這時改從通知本身取對話網址，照樣記下最後推送、通知開著的App更新未讀數
+  if (!data && event.notification) {
+    var pn = event.notification;
+    var nav = '';
+    try {
+      nav = pn.navigate ? String(pn.navigate) : '';
+    } catch (e) { }
+    var path = nav.replace(/^https?:\/\/[^\/]+/, '');
+    data = { web_push: 8030, notification: { tag: pn.tag || '' }, msgUrl: path, appBadge: null, contentMissing: why || '沒有內容' };
   }
   if (!data || data.web_push !== 8030) {
     return; // 一般推送（Chrome、Android）：照原本由ngsw顯示
@@ -23,7 +39,7 @@ self.addEventListener('push', function (event) {
   var n = data.notification || {};
   var url = data.msgUrl || '';
   var proposed = !!event.notification;
-  var jobs = [msgDiag('收到宣告式推送', url + (proposed ? ' 由iOS顯示通知' : ' 不支援宣告式，自己顯示') + ' 未讀=' + data.appBadge)];
+  var jobs = [msgDiag('收到宣告式推送', url + (proposed ? ' 由iOS顯示通知' : ' 不支援宣告式，自己顯示') + ' 未讀=' + data.appBadge + (data.contentMissing ? '（讀不到推送內容：' + data.contentMissing + '）' : ''))];
   if (!proposed) {
     jobs.push(self.registration.showNotification(n.title || '芯樂生活', {
       body: n.body || '',
