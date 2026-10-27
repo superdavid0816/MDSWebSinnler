@@ -244,7 +244,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     h1{ text-align:center; font-size:20pt; letter-spacing:8px; margin:10px 0 12px; }
     .party{ line-height:1.6; margin-bottom:8px; }
     .cap{ font-weight:bold; margin:10px 0 4px; }
-    table{ width:100%; border-collapse:collapse; }
+    table{ width:calc(100% - 2px); border-collapse:collapse; }   /* \u5BEC\u5EA6\u5C112px\uFF1A\u8CBC\u6EFF\u53EF\u5370\u7BC4\u570D\u908A\u754C\u6642\uFF0C\u6700\u53F3\u908A\u90A3\u689D\u7DDA\u6703\u88AB\u88C1\u6389\u4E00\u5927\u534A */
     th,td{ border:1px solid #000; padding:4px 6px; font-size:11pt; }
     th{ background:#eee; }
     .n{ text-align:right; white-space:nowrap; }
